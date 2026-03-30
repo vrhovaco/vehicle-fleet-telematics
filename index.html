@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBIT FLEET • Vehicle Telematics Platform</title>
+    <meta name="description" content="Premium frontend-only Vehicle Fleet Telematics Platform with 3D vehicle viewer, route replay, alerts, and animated analytics.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar glass">
+            <div class="brand-block">
+                <div class="brand-mark">OF</div>
+                <div>
+                    <p class="eyebrow">Premium Telematics</p>
+                    <h1>ORBIT FLEET</h1>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-head">
+                    <span>Fleet Overview</span>
+                    <span class="badge live-dot">LIVE</span>
+                </div>
+                <div class="fleet-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Active Vehicles</span>
+                        <strong id="activeVehiclesCount">12</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Critical Alerts</span>
+                        <strong id="criticalAlertsCount">2</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Avg Fuel Health</span>
+                        <strong id="avgFuelHealth">84%</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Route Efficiency</span>
+                        <strong id="routeEfficiency">93.4%</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-head">
+                    <span>Vehicles</span>
+                    <button class="ghost-button" id="shuffleVehicleBtn">Shuffle</button>
+                </div>
+                <div id="vehicleList" class="vehicle-list"></div>
+            </div>
+        </aside>
+
+        <main class="main-layout">
+            <header class="topbar glass">
+                <div>
+                    <p class="eyebrow">Control Center</p>
+                    <h2 id="topbarVehicleName">Falcon XR • Sarajevo Route</h2>
+                </div>
+                <div class="topbar-actions">
+                    <div class="topbar-chip">
+                        <span class="chip-label">Uptime</span>
+                        <strong id="uptimeValue">99.94%</strong>
+                    </div>
+                    <div class="topbar-chip">
+                        <span class="chip-label">Latency</span>
+                        <strong id="latencyValue">18 ms</strong>
+                    </div>
+                    <div class="topbar-chip">
+                        <span class="chip-label">Sync</span>
+                        <strong id="syncValue">Real-time</strong>
+                    </div>
+                </div>
+            </header>
+
+            <section class="hero-grid">
+                <div class="hero-panel glass">
+                    <div class="panel-header">
+                        <div>
+                            <p class="eyebrow">3D Vehicle Viewer</p>
+                            <h3 id="viewerTitle">Falcon XR</h3>
+                        </div>
+                        <div class="viewer-tools">
+                            <button class="tool-button" id="resetCameraBtn">Reset View</button>
+                            <button class="tool-button" id="toggleRotateBtn">Auto Rotate</button>
+                        </div>
+                    </div>
+
+                    <div class="viewer-stage">
+                        <canvas id="vehicleCanvas"></canvas>
+                        <div class="viewer-overlay">
+                            <div class="overlay-card">
+                                <span>Status</span>
+                                <strong id="vehicleStatus">En Route</strong>
+                            </div>
+                            <div class="overlay-card">
+                                <span>Driver</span>
+                                <strong id="driverName">A. Kovacevic</strong>
+                            </div>
+                            <div class="overlay-card">
+                                <span>Last Sync</span>
+                                <strong id="lastSync">2 sec ago</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="side-stats">
+                    <div class="metric-card glass">
+                        <div class="metric-head">
+                            <span>Speed</span>
+                            <strong id="speedValue">86 km/h</strong>
+                        </div>
+                        <div class="gauge">
+                            <div class="gauge-ring"></div>
+                            <div class="gauge-fill" id="speedGaugeFill"></div>
+                            <div class="gauge-center">
+                                <span>Current</span>
+                                <strong id="speedGaugeCenter">86</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass">
+                        <div class="metric-head">
+                            <span>Fuel</span>
+                            <strong id="fuelValue">72%</strong>
+                        </div>
+                        <div class="progress-block">
+                            <div class="progress-bar"><div id="fuelBar" class="progress-fill fuel-fill"></div></div>
+                            <div class="progress-meta">
+                                <span id="rangeValue">Range 418 km</span>
+                                <span id="consumptionValue">6.8 L / 100km</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass">
+                        <div class="metric-head">
+                            <span>Engine Temp</span>
+                            <strong id="tempValue">91°C</strong>
+                        </div>
+                        <div class="progress-block">
+                            <div class="progress-bar"><div id="tempBar" class="progress-fill temp-fill"></div></div>
+                            <div class="progress-meta">
+                                <span id="oilValue">Oil 4.7 bar</span>
+                                <span id="batteryValue">Battery 13.9V</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass">
+                        <div class="metric-head">
+                            <span>Efficiency Score</span>
+                            <strong id="efficiencyValue">92 / 100</strong>
+                        </div>
+                        <canvas id="miniTrendChart" class="mini-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="analytics-column">
+                    <div class="panel glass">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Telemetry</p>
+                                <h3>Live Metrics</h3>
+                            </div>
+                            <div class="tab-row">
+                                <button class="tab-button active" data-series="speed">Speed</button>
+                                <button class="tab-button" data-series="fuel">Fuel</button>
+                                <button class="tab-button" data-series="temp">Temp</button>
+                            </div>
+                        </div>
+                        <canvas id="telemetryChart" class="chart-canvas"></canvas>
+                    </div>
+
+                    <div class="panel glass">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Route Replay</p>
+                                <h3>GPS Path Intelligence</h3>
+                            </div>
+                            <div class="route-legend">
+                                <span><i class="legend-dot current-dot"></i>Current</span>
+                                <span><i class="legend-dot projected-dot"></i>Projected</span>
+                            </div>
+                        </div>
+                        <div class="route-board">
+                            <svg id="routeMap" viewBox="0 0 600 280" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#4fd1c5"></stop>
+                                        <stop offset="100%" stop-color="#8b5cf6"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <g class="map-grid"></g>
+                                <polyline id="routePath" fill="none" stroke="url(#routeGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                                <polyline id="routeProjection" fill="none" stroke="#ffffff55" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round"></polyline>
+                                <circle id="routeMarker" r="9" fill="#4fd1c5"></circle>
+                            </svg>
+                            <div class="route-meta">
+                                <div><span>ETA</span><strong id="etaValue">17 min</strong></div>
+                                <div><span>Distance</span><strong id="distanceValue">24.8 km</strong></div>
+                                <div><span>Stops</span><strong id="stopsValue">03</strong></div>
+                                <div><span>GeoFence</span><strong id="geofenceValue">Within zone</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insights-column">
+                    <div class="panel glass">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">System Alerts</p>
+                                <h3>Operational Feed</h3>
+                            </div>
+                            <span class="badge" id="alertBadge">2 High</span>
+                        </div>
+                        <div id="alertFeed" class="alert-feed"></div>
+                    </div>
+
+                    <div class="panel glass">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Performance</p>
+                                <h3>Trip Intelligence</h3>
+                            </div>
+                        </div>
+                        <div class="performance-grid">
+                            <div class="performance-card"><span>Harsh Brakes</span><strong id="harshBrakeValue">1</strong></div>
+                            <div class="performance-card"><span>Idle Time</span><strong id="idleValue">11 min</strong></div>
+                            <div class="performance-card"><span>Avg RPM</span><strong id="rpmValue">2,160</strong></div>
+                            <div class="performance-card"><span>Tire Health</span><strong id="tireValue">89%</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="panel glass">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">Command Actions</p>
+                                <h3>Quick Controls</h3>
+                            </div>
+                        </div>
+                        <div class="command-grid">
+                            <button class="command-button">Lock Vehicle</button>
+                            <button class="command-button">Flash Lights</button>
+                            <button class="command-button">Immobilize</button>
+                            <button class="command-button">Share Route</button>
+                            <button class="command-button">Download Report</button>
+                            <button class="command-button">Open Camera Feed</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
