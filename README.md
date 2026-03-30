@@ -4,9 +4,7 @@ Premium frontend-only vehicle fleet telematics dashboard with a 3D vehicle viewe
 
 ## Live Demo
 
-Add your GitHub Pages link here after deployment:
-
-`https://vrhovaco.github.io/vehicle-fleet-telematics/`
+https://vrhovaco.github.io/vehicle-fleet-telematics/
 
 ---
 
